@@ -1,7 +1,7 @@
 {
   "name": "TipCalc — Quick Tip Calculator",
   "short_name": "TipCalc",
-  "description": "Fast tip calculator with one-tap 10/15/20/25% buttons. Works offline.",
+  "description": "Basic calculator with instant tip calcs with one-tap 10/15/20/25% buttons. Works offline.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -15,3 +15,4 @@
     { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
+
