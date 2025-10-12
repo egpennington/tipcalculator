@@ -1,0 +1,68 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#calculator {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #1c1c1c;
+  width: 400px;
+  padding: 20px 5px 5px 5px;
+  max-width: 400px;
+}
+
+#display {
+  background:#1c1c1c;
+  color: #fff;
+  text-align: right;
+  font-size: 90px;
+  border: none;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 8px;
+  border-top: 0.5px solid #bbb;
+}
+
+#buttons button {
+  background: #505050;
+  color: #fff;
+  font-size: 36px;
+  text-align: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  border: none;
+}
+
+#buttons button:hover {
+  opacity: 0.7;
+}
+
+#buttons button:active {
+  opacity: 0.9;
+}
+
+#tip-results {
+  height: 24px;
+  opacity: 0;
+  transition: opacity 160ms ease-out;
+  font-size: 0.95rem;
+  color: #bbb;
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: center;
+  font-variant-numeric: tabular-nums; /* keeps numbers from jittering */
+}
+
+#tip-results.show { opacity: 1; }

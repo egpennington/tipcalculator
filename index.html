@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="Basic calculator with Instant tip calculator: enter the bill and tap 10%, 15%, 20%, or 25% to see tip and total. Fast, mobile-friendly, and works offline as a PWA.">
+    <meta name="keywords" content="tip calculator, gratuity, percentage calculator, restaurant bill, bill splitter, 10%, 15%, 20%, 25%, offline, PWA, mobile calculator">
+    <meta name="author" content="penningtonProgramming" />
+    <title>Calculator and Tip</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#ff9500" />
+
+    <!-- iOS PWA support (optional but nice) -->
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <!-- Social share -->
+    <meta property="og:title" content="TipCalc — Quick Tip Calculator">
+    <meta property="og:description" content="Enter a bill, tap a tip, see tip + total instantly. Works offline.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/icons/icon-512.png">
+    <meta property="og:url" content="https://your-site.netlify.app/">
+    <meta name="twitter:card" content="summary_large_image">
+  </head>
+  <body>
+    <div id="calculator">
+      <div id="tip-results" style="margin-top:10px; font-size:1.2rem; color:#fff;">
+        <span id="bill-amount"></span>
+        <span id="tip-amount"></span>
+        <span id="total-amount"></span>
+      </div>
+      <input type="text" id="display" readonly />
+      <div class="display-divider"></div>
+      <div id="buttons"></div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
