@@ -65,4 +65,64 @@ body {
   font-variant-numeric: tabular-nums; /* keeps numbers from jittering */
 }
 
+
 #tip-results.show { opacity: 1; }
+
+/* Footer: sits at the bottom, with safe-area padding and a classy divider */
+.app-footer {
+  margin-top: auto;  /* pushes footer to the bottom in the flex column */
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  text-align: center;
+  font-size: clamp(11px, 2.6vw, 13px);
+  color: #99a1a8;
+  position: relative;
+}
+
+/* Hairline + soft shadow divider above the footer (matches your display divider vibe) */
+.app-footer::before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-bottom: 8px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.16) 20%,
+    rgba(255,255,255,0.24) 50%,
+    rgba(255,255,255,0.16) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 -1px 6px rgba(0,0,0,0.35);
+}
+
+.footer-inner {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0.9;
+}
+
+.footer-inner .brand {
+  letter-spacing: 0.3px;
+  color: #c9cdd2;
+}
+
+.footer-inner .dot {
+  opacity: 0.5;
+}
+
+.app-footer a {
+  color: #b6bec6;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(255,255,255,0.25);
+  padding-bottom: 1px;
+}
+
+@media (hover: hover) {
+  .app-footer a:hover {
+    color: #ffffff;
+    border-bottom-color: rgba(255,255,255,0.5);
+  }
+}
