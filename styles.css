@@ -126,3 +126,14 @@ body {
     border-bottom-color: rgba(255,255,255,0.5);
   }
 }
+
+#expr-line {
+  height: 20px;
+  text-align: right;
+  color: #9aa2a8;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+
