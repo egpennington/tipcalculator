@@ -70,87 +70,111 @@ for (let i = 0; i < buttonValues.length; i++) {
   }
 
   button.addEventListener("click", function () {
-    if (rightSymbols.includes(value)) {
-      // =, ÷, x, -, +
-      if (value === "=") {
-        if (operator && display.value !== "") {
-          B = display.value;
-          const numA = Number(A);
-          const numB = Number(B);
-          let result;
+  if (rightSymbols.includes(value)) {
+    // =, ÷, x, -, +
+    if (value === "=") {
+      if (operator && display.value !== "") {
+        B = display.value;
+        const numA = Number(A);
+        const numB = Number(B);
+        let result;
 
-          switch (operator) {
-            case "÷": result = numA / numB; break;
-            case "x": result = numA * numB; break;
-            case "-": result = numA - numB; break;
-            case "+": result = numA + numB; break;
-          }
-
-          if (Number.isFinite(result)) {
-            display.value = Number.isInteger(result) ? String(result) : result.toFixed(2);
-          } else {
-            display.value = "Error";
-          }
-          clearAll();
+        switch (operator) {
+          case "÷": result = numA / numB; break;
+          case "x": result = numA * numB; break;
+          case "-": result = numA - numB; break;
+          case "+": result = numA + numB; break;
         }
-      } else {
-        // picked an operator
-        operator = value;
+
+        if (Number.isFinite(result)) {
+          display.value = Number.isInteger(result) ? String(result) : result.toFixed(2);
+        } else {
+          display.value = "Error";
+        }
+        clearAll();
+      }
+    } else {
+      // user picked an operator (÷, x, -, +)
+      // If there's already a pending op and a RHS on screen, compute first
+      if (operator && display.value !== "") {
+        const acc = Number(A);
+        const rhs = Number(display.value);
+        let interim;
+
+        switch (operator) {
+          case "÷": interim = acc / rhs; break;
+          case "x": interim = acc * rhs; break;
+          case "-": interim = acc - rhs; break;
+          case "+": interim = acc + rhs; break;
+        }
+
+        if (Number.isFinite(interim)) {
+          A = String(Number.isInteger(interim) ? interim : +interim.toFixed(2));
+        } else {
+          A = "0";
+        }
+        display.value = "";
+      } else if (display.value !== "") {
+        // first operator after typing a number
         A = display.value;
         display.value = "";
       }
 
-    } else if (topSymbols.includes(value)) {
-      // AC, +/-, %
-      if (value === "AC") {
-        clearAll();
-        display.value = "0";
-        lastBill = null;
-        clearTipUI();
-      } else if (value === "+/-") {
-        if (display.value !== "" && display.value !== "0") {
-          display.value = display.value[0] === "-" ? display.value.slice(1) : "-" + display.value;
-        }
-      } else if (value === "%") {
-        const n = Number(display.value);
-        if (Number.isFinite(n)) display.value = String(n / 100);
-      }
+      // set/replace the operator to the one just pressed
+      operator = value;
+    }
 
-    } else if (bottomSymbols.includes(value)) {
-      // Tip buttons: 10%, 15%, 20%, 25%
-      const raw = display.value.trim();
-      if (raw === "" || raw === ".") return;
-
-      const base = Number(raw);
-      if (!Number.isFinite(base)) return;
-
-      const pct = Number(value.slice(0, -1)) / 100; // "15%" -> 0.15
-      const tip = +(base * pct).toFixed(2);         // make it a number
-      const total = +(base + tip).toFixed(2);
-
-      lastBill = base;
-      display.value = fmt(tip);      // show the tip in the main display
-      updateTipUI(lastBill, tip, total);
+  } else if (topSymbols.includes(value)) {
+    // AC, +/-, %
+    if (value === "AC") {
       clearAll();
+      display.value = "0";
+      lastBill = null;
+      clearTipUI();
+    } else if (value === "+/-") {
+      if (display.value !== "" && display.value !== "0") {
+        display.value = display.value[0] === "-" ? display.value.slice(1) : "-" + display.value;
+      }
+    } else if (value === "%") {
+      const n = Number(display.value);
+      if (Number.isFinite(n)) display.value = String(n / 100);
+    }
 
+  } else if (bottomSymbols.includes(value)) {
+    // Tip buttons: 10%, 15%, 20%, 25%
+    const raw = display.value.trim();
+    if (raw === "" || raw === ".") return;
+
+    const base = Number(raw);
+    if (!Number.isFinite(base)) return;
+
+    const pct = Number(value.slice(0, -1)) / 100; // "15%" -> 0.15
+    const tip = +(base * pct).toFixed(2);         // number
+    const total = +(base + tip).toFixed(2);
+
+    lastBill = base;
+    display.value = Number(tip).toFixed(2);       // show the tip in the main display
+    updateTipUI(lastBill, tip, total);
+    clearAll();
+
+  } else {
+    // numbers or "."
+    if (value === ".") {
+      if (display.value === "" || display.value === "0") {
+        display.value = "0.";
+      } else if (!display.value.includes(".")) {
+        display.value += ".";
+      }
     } else {
-      // numbers or "."
-      if (value === ".") {
-        if (display.value === "" || display.value === "0") {
-          display.value = "0.";
-        } else if (!display.value.includes(".")) {
-          display.value += ".";
-        }
+      // digits
+      if (display.value === "0") {
+        display.value = value; // avoid leading zeros
       } else {
-        // digits
-        if (display.value === "0") {
-          display.value = value; // avoid leading zeros
-        } else {
-          display.value += value;
-        }
+        display.value += value;
       }
     }
-  });
+  }
+});
 
   document.getElementById("buttons").appendChild(button);
 }
@@ -162,3 +186,4 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.error("SW registration failed:", err));
   });
 }
+
