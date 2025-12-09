@@ -1,6 +1,6 @@
 const buttonValues = [
-  "AC", "+/-", "%", "÷",
-  "⌫",
+  "AC",
+  "del","+/-", "%", "÷",
   "7", "8", "9", "x",
   "4", "5", "6", "-",
   "1", "2", "3", "+",
@@ -9,7 +9,7 @@ const buttonValues = [
 ];
 
 const rightSymbols = ["÷", "x", "-", "+", "="];
-const topSymbols = ["AC", "⌫", "+/-", "%"];
+const topSymbols = ["AC", "del", "+/-", "%"];
 const bottomSymbols = ["10%", "15%", "20%", "25%"];
 
 const display = document.getElementById("display");
@@ -70,7 +70,7 @@ for (let value of buttonValues) {
     button.style.gridColumn = "span 2";
   }
 
-  if (value === "⌫") {
+  if (value === "AC") {
     button.style.gridColumn = "1 / -1";
     button.style.width = "100%";
     button.style.fontSize = "28px";
@@ -150,7 +150,7 @@ for (let value of buttonValues) {
         clearTipUI();
         clearExpr();
 
-      } else if (value === "⌫") {
+      } else if (value === "del") {
         if (display.value === "Error") {
           display.value = "0";
           return;
