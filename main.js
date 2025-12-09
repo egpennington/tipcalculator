@@ -1,5 +1,6 @@
 const buttonValues = [
   "AC", "+/-", "%", "÷",
+  "⌫",
   "7", "8", "9", "x",
   "4", "5", "6", "-",
   "1", "2", "3", "+",
@@ -8,19 +9,19 @@ const buttonValues = [
 ];
 
 const rightSymbols = ["÷", "x", "-", "+", "="];
-const topSymbols = ["AC", "+/-", "%"];
+const topSymbols = ["AC", "⌫", "+/-", "%"];
 const bottomSymbols = ["10%", "15%", "20%", "25%"];
 
 const display = document.getElementById("display");
-display.value = "0"; // start at 0
+display.value = "0";
 
-// Tip/Total UI (optional)
+// Tip/Total UI
 const billEl = document.getElementById("bill-amount");
 const tipEl = document.getElementById("tip-amount");
 const totalEl = document.getElementById("total-amount");
 const tipResults = document.getElementById("tip-results");
 
-// Expression line UI (new)
+// Expression line UI
 const exprEl = document.getElementById("expr-line");
 const setExpr = (a, op, b = "") => {
   if (!exprEl) return;
@@ -30,24 +31,24 @@ const setExpr = (a, op, b = "") => {
 };
 const clearExpr = () => { if (exprEl) exprEl.textContent = ""; };
 
-// simple currency-ish formatter
+// Formatter
 const fmt = (n) => Number(n).toFixed(2);
 
-// helpers (single definitions)
+// UI helpers
 function updateTipUI(bill, tip, total) {
-  if (billEl)  billEl.textContent  = `Bill: $${fmt(bill)}`;
-  if (tipEl)   tipEl.textContent   = `Tip: $${fmt(tip)}`;
-  if (totalEl) totalEl.textContent = `Total: $${fmt(total)}`;
-  if (tipResults) tipResults.classList.add("show");
+  billEl.textContent  = `Bill: $${fmt(bill)}`;
+  tipEl.textContent   = `Tip: $${fmt(tip)}`;
+  totalEl.textContent = `Total: $${fmt(total)}`;
+  tipResults.classList.add("show");
 }
 function clearTipUI() {
-  if (billEl)  billEl.textContent = "";
-  if (tipEl)   tipEl.textContent = "";
-  if (totalEl) totalEl.textContent = "";
-  if (tipResults) tipResults.classList.remove("show");
+  billEl.textContent = "";
+  tipEl.textContent = "";
+  totalEl.textContent = "";
+  tipResults.classList.remove("show");
 }
 
-// A+B, A*B, A-B, A/B
+// Calculator state
 let A = 0;
 let operator = null;
 let B = null;
@@ -59,16 +60,22 @@ function clearAll() {
   B = null;
 }
 
-for (let i = 0; i < buttonValues.length; i++) {
-  const value = buttonValues[i];
+// Build buttons
+for (let value of buttonValues) {
   const button = document.createElement("button");
   button.innerText = value;
 
-  // simple styling hooks (optional)
   if (value === "0") {
     button.style.width = "200px";
     button.style.gridColumn = "span 2";
   }
+
+  if (value === "⌫") {
+    button.style.gridColumn = "1 / -1";
+    button.style.width = "100%";
+    button.style.fontSize = "28px";
+  }
+
   if (rightSymbols.includes(value)) {
     button.style.backgroundColor = "#ff9500";
   } else if (topSymbols.includes(value)) {
@@ -80,8 +87,9 @@ for (let i = 0; i < buttonValues.length; i++) {
   }
 
   button.addEventListener("click", function () {
+
+    // OPERATORS
     if (rightSymbols.includes(value)) {
-      // =, ÷, x, -, +
       if (value === "=") {
         if (operator && display.value !== "") {
           B = display.value;
@@ -96,17 +104,15 @@ for (let i = 0; i < buttonValues.length; i++) {
             case "+": result = numA + numB; break;
           }
 
-          if (Number.isFinite(result)) {
-            display.value = Number.isInteger(result) ? String(result) : result.toFixed(2);
-          } else {
-            display.value = "Error";
-          }
+          display.value = Number.isFinite(result)
+            ? Number.isInteger(result) ? String(result) : result.toFixed(2)
+            : "Error";
+
           clearAll();
-          clearExpr(); // clear the expression line after equals
+          clearExpr();
         }
+
       } else {
-        // user picked an operator (÷, x, -, +)
-        // If there's already a pending op and a RHS on screen, compute first
         if (operator && display.value !== "") {
           const acc = Number(A);
           const rhs = Number(display.value);
@@ -119,72 +125,88 @@ for (let i = 0; i < buttonValues.length; i++) {
             case "+": interim = acc + rhs; break;
           }
 
-          if (Number.isFinite(interim)) {
-            A = String(Number.isInteger(interim) ? interim : +interim.toFixed(2));
-          } else {
-            A = "0";
-          }
-          // show the running result with the new operator
+          A = Number.isFinite(interim)
+            ? String(Number.isInteger(interim) ? interim : +interim.toFixed(2))
+            : "0";
+
           setExpr(A, value);
-          display.value = "0"; // keep visible (no blank), ready for next number
-        } else if (display.value !== "") {
-          // first operator after typing a number
+          display.value = "0";
+        } else {
           A = display.value;
-          setExpr(A, value);   // show "A op"
-          display.value = "0"; // ready for next number
+          setExpr(A, value);
+          display.value = "0";
         }
 
-        // set/replace the operator to the one just pressed
         operator = value;
       }
 
+    // TOP BUTTONS
     } else if (topSymbols.includes(value)) {
-      // AC, +/-, %
+
       if (value === "AC") {
         clearAll();
         display.value = "0";
         lastBill = null;
         clearTipUI();
-        clearExpr(); // also clear the expression line
-      } else if (value === "+/-") {
-        if (display.value !== "" && display.value !== "0") {
-          display.value = display.value[0] === "-" ? display.value.slice(1) : "-" + display.value;
+        clearExpr();
+
+      } else if (value === "⌫") {
+        if (display.value === "Error") {
+          display.value = "0";
+          return;
         }
+
+        if (display.value.length > 1) {
+          display.value = display.value.slice(0, -1);
+          if (
+            display.value === "-" ||
+            display.value === "" ||
+            display.value === "0."
+          ) {
+            display.value = "0";
+          }
+        } else {
+          display.value = "0";
+        }
+
+      } else if (value === "+/-") {
+        if (display.value !== "0") {
+          display.value = display.value[0] === "-"
+            ? display.value.slice(1)
+            : "-" + display.value;
+        }
+
       } else if (value === "%") {
         const n = Number(display.value);
         if (Number.isFinite(n)) display.value = String(n / 100);
       }
 
+    // TIP BUTTONS
     } else if (bottomSymbols.includes(value)) {
-      // Tip buttons: 10%, 15%, 20%, 25%
-      const raw = display.value.trim();
-      if (raw === "" || raw === ".") return;
-
-      const base = Number(raw);
+      const base = Number(display.value);
       if (!Number.isFinite(base)) return;
 
-      const pct = Number(value.slice(0, -1)) / 100; // "15%" -> 0.15
-      const tip = +(base * pct).toFixed(2);         // number
+      const pct = Number(value.slice(0, -1)) / 100;
+      const tip = +(base * pct).toFixed(2);
       const total = +(base + tip).toFixed(2);
 
       lastBill = base;
-      display.value = Number(tip).toFixed(2);       // show the tip in the main display
+      display.value = tip.toFixed(2);
       updateTipUI(lastBill, tip, total);
       clearAll();
-      clearExpr(); // tips don't use expression; clear it
+      clearExpr();
 
+    // NUMBERS & DOT
     } else {
-      // numbers or "."
       if (value === ".") {
-        if (display.value === "" || display.value === "0") {
+        if (display.value === "0") {
           display.value = "0.";
         } else if (!display.value.includes(".")) {
           display.value += ".";
         }
       } else {
-        // digits
         if (display.value === "0") {
-          display.value = value; // avoid leading zeros
+          display.value = value;
         } else {
           display.value += value;
         }
@@ -195,7 +217,7 @@ for (let i = 0; i < buttonValues.length; i++) {
   document.getElementById("buttons").appendChild(button);
 }
 
-// PWA service worker registration (optional)
+// PWA service worker
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js")
