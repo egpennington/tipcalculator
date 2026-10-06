@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">TipCalc</string>
+    <string name="title_activity_main">TipCalc</string>
+    <string name="package_name">com.penningtonprogramming.tipcalc</string>
+    <string name="custom_url_scheme">com.penningtonprogramming.tipcalc</string>
+</resources>

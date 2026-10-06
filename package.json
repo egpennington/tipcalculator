@@ -1,0 +1,32 @@
+{
+  "name": "tipcalculator",
+  "version": "1.0.0",
+  "description": "Basic calculator with instant tip calcs with one-tap 10/15/20/25% buttons. Works offline.",
+  "main": "index.html",
+  "scripts": {
+    "build": "node build.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egpennington/tipcalculator.git"
+  },
+  "keywords": [
+    "calculator",
+    "tip",
+    "gratuity",
+    "percentage",
+    "pwa"
+  ],
+  "author": "penningtonProgramming",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/egpennington/tipcalculator/issues"
+  },
+  "homepage": "https://github.com/egpennington/tipcalculator#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2"
+  }
+}
