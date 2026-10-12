@@ -2,6 +2,7 @@ const fs = require('fs');
 
 const files = [
   'index.html',
+  'privacy.html',
   'main.js',
   'styles.css',
   'site.webmanifest',
