@@ -45,18 +45,15 @@
   </head>
   <body>
     <div id="calculator">
-      <div
-        id="tip-results"
-        style="margin-top: 10px; font-size: 1.2rem; color: #fff"
-      >
+      <div id="tip-results" aria-live="polite">
         <span id="bill-amount"></span>
         <span id="tip-amount"></span>
         <span id="total-amount"></span>
       </div>
       <div id="expr-line" aria-live="polite"></div>
-      <input type="text" id="display" readonly />
+      <input type="text" id="display" readonly aria-label="Calculator display" inputmode="none" />
       <div class="display-divider"></div>
-      <div id="buttons"></div>
+      <div id="buttons" aria-label="Calculator keypad"></div>
       <footer class="app-footer" role="contentinfo">
         <div class="footer-inner">
           <span class="brand">TipCalc</span>

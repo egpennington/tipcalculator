@@ -92,15 +92,12 @@ for (let value of buttonValues) {
     button.classList.add('clear-btn');
   }
 
-  if (rightSymbols.includes(value)) {
-    button.style.backgroundColor = '#ff9500';
-  } else if (topSymbols.includes(value)) {
-    button.style.backgroundColor = '#d4d4d2';
-    button.style.color = '#1c1c1c';
-  } else if (bottomSymbols.includes(value)) {
-    button.style.backgroundColor = '#7dce82';
-    button.style.fontSize = '28px';
-  }
+  // Visual styles belong in CSS, not inline JavaScript.
+  if (rightSymbols.includes(value)) button.classList.add('operator-btn');
+  else if (topSymbols.includes(value)) button.classList.add('utility-btn');
+  else if (bottomSymbols.includes(value)) button.classList.add('tip-btn');
+  button.type = 'button';
+  button.setAttribute('aria-label', value === 'del' ? 'Delete' : value === 'AC' ? 'All clear' : value);
 
   button.addEventListener('click', function () {
     // OPERATORS
@@ -241,10 +238,33 @@ for (let value of buttonValues) {
         }
       }
     }
+    fitDisplayText();
   });
 
   document.getElementById('buttons').appendChild(button);
 }
+
+// Fit long numeric results inside the available display width.
+// The calculator's math is unchanged; this adjusts only the font size.
+const displayCanvas = document.createElement('canvas');
+const displayContext = displayCanvas.getContext('2d');
+function fitDisplayText() {
+  const available = Math.max(0, display.clientWidth - 8);
+  if (!available || !displayContext) return;
+  const style = getComputedStyle(display);
+  const baseSize = Math.min(76, Math.max(32, window.innerWidth * 0.11));
+  let size = baseSize;
+  const family = style.fontFamily;
+  const text = display.value || '0';
+  while (size > 16) {
+    displayContext.font = `${size}px ${family}`;
+    if (displayContext.measureText(text).width <= available) break;
+    size -= 1;
+  }
+  display.style.fontSize = `${size}px`;
+}
+window.addEventListener('resize', fitDisplayText);
+fitDisplayText();
 
 // PWA service worker
 if ('serviceWorker' in navigator) {

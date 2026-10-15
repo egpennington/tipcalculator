@@ -1,156 +1,151 @@
+/* TipCalc — responsive, viewport-aware layout */
+:root {
+  color-scheme: dark;
+  --surface: #1c1c1c;
+  --digit: #505050;
+  --utility: #d4d4d2;
+  --operator: #ff9500;
+  --tip: #7dce82;
+  --gap: clamp(5px, 1.5vw, 9px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { min-width: 0; min-height: 100%; background: var(--surface); }
 body {
+  margin: 0;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  background: var(--surface);
 }
 
 #calculator {
+  width: min(100%, 440px);
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  padding: calc(8px + env(safe-area-inset-top, 0px))
+           calc(10px + env(safe-area-inset-right, 0px))
+           calc(5px + env(safe-area-inset-bottom, 0px))
+           calc(10px + env(safe-area-inset-left, 0px));
+  background: var(--surface);
+  color: #fff;
   font-family: Arial, Helvetica, sans-serif;
-  background: #1c1c1c;
-  width: 400px;
-  padding: 20px 5px 5px 5px;
-  max-width: 400px;
-}
-
-#display {
-  background:#1c1c1c;
-  color: #fff;
-  text-align: right;
-  font-size: 90px;
-  border: none;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-#buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  padding-left: 8px;
-  border-top: 0.5px solid #bbb;
-}
-
-#buttons button {
-  background: #505050;
-  color: #fff;
-  font-size: 36px;
-  text-align: center;
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
-  border: none;
-}
-
-#buttons button:hover {
-  opacity: 0.7;
-}
-
-#buttons button:active {
-  opacity: 0.9;
-}
-
-#buttons .clear-btn {
-  grid-column: 1 / -1;
-  width: 100%;
-  height: 60px;
-  aspect-ratio: auto;
-  border-radius: 40px;
-  font-size: 28px;
-}
-
-#buttons .zero-btn {
-  grid-column: span 2;
-  width: 100%;
-  height: auto;
-  aspect-ratio: auto;
-  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 #tip-results {
-  height: 24px;
+  flex: 0 0 auto;
+  min-height: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 6px;
   opacity: 0;
   transition: opacity 160ms ease-out;
-  font-size: 0.95rem;
-  color: #bbb;
-  display: flex;
-  gap: 16px;
-  justify-content: flex-end;
-  align-items: center;
-  font-variant-numeric: tabular-nums; /* keeps numbers from jittering */
+  font-size: clamp(10px, 2.7vw, 13px);
+  line-height: 1.3;
+  color: #e7e7e7;
+  font-variant-numeric: tabular-nums;
 }
-
-
 #tip-results.show { opacity: 1; }
-
-/* Footer: sits at the bottom, with safe-area padding and a classy divider */
-.app-footer {
-  margin-top: auto;  /* pushes footer to the bottom in the flex column */
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-  text-align: center;
-  font-size: clamp(11px, 2.6vw, 13px);
-  color: #99a1a8;
-  position: relative;
-}
-
-/* Hairline + soft shadow divider above the footer (matches your display divider vibe) */
-.app-footer::before {
-  content: "";
-  display: block;
-  height: 1px;
-  margin-bottom: 8px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.16) 20%,
-    rgba(255,255,255,0.24) 50%,
-    rgba(255,255,255,0.16) 80%,
-    transparent 100%
-  );
-  box-shadow: 0 -1px 6px rgba(0,0,0,0.35);
-}
-
-.footer-inner {
-  display: inline-flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  opacity: 0.9;
-}
-
-.footer-inner .brand {
-  letter-spacing: 0.3px;
-  color: #c9cdd2;
-}
-
-.footer-inner .dot {
-  opacity: 0.5;
-}
-
-.app-footer a {
-  color: #b6bec6;
-  text-decoration: none;
-  border-bottom: 1px dotted rgba(255,255,255,0.25);
-  padding-bottom: 1px;
-}
-
-@media (hover: hover) {
-  .app-footer a:hover {
-    color: #ffffff;
-    border-bottom-color: rgba(255,255,255,0.5);
-  }
-}
+#tip-results span { min-width: 0; overflow-wrap: anywhere; }
 
 #expr-line {
-  height: 20px;
+  flex: 0 0 auto;
+  height: 18px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   text-align: right;
   color: #9aa2a8;
-  font-size: 0.9rem;
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
-  opacity: 0.9;
 }
 
+#display {
+  flex: 0 0 auto;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: clamp(55px, 12dvh, 96px);
+  padding: 0 2px;
+  background: transparent;
+  color: #fff;
+  text-align: right;
+  font-family: inherit;
+  font-size: clamp(32px, 11vw, 76px);
+  font-variant-numeric: tabular-nums;
+  border: 0;
+  outline: 0;
+  border-radius: 0;
+}
+.display-divider { flex: 0 0 auto; height: 1px; background: #777; opacity: 0.7; }
 
+#buttons {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: minmax(0, .75fr) repeat(6, minmax(0, 1fr));
+  gap: var(--gap);
+  padding: var(--gap) 0;
+}
+#buttons button {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--digit);
+  color: #fff;
+  font-family: inherit;
+  font-size: clamp(20px, min(6.5vw, 4.2dvh), 36px);
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#buttons .operator-btn { background: var(--operator); }
+#buttons .utility-btn { background: var(--utility); color: #1c1c1c; }
+#buttons .tip-btn { background: var(--tip); font-size: clamp(16px, min(5.2vw, 3.7dvh), 28px); }
+#buttons .clear-btn { grid-column: 1 / -1; font-size: clamp(22px, 4.5dvh, 30px); }
+#buttons .zero-btn { grid-column: span 2; }
+#buttons button:active { filter: brightness(1.18); }
+#buttons button:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
+@media (hover: hover) { #buttons button:hover { filter: brightness(1.12); } }
+
+.app-footer {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 5px 4px 3px;
+  color: #99a1a8;
+  font-size: clamp(11px, 2.6vw, 13px);
+}
+.app-footer::before {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-bottom: 6px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.24), transparent);
+}
+.footer-inner { display: inline-flex; gap: 12px; align-items: center; justify-content: center; }
+.footer-inner .brand { letter-spacing: .3px; color: #c9cdd2; }
+.footer-inner .dot { opacity: .5; }
+.app-footer a { color: #b6bec6; text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,.25); }
+
+/* On exceptionally short viewports, preserve usable tap targets and permit scrolling. */
+@media (max-height: 570px) {
+  #calculator { height: auto; min-height: 100dvh; overflow: visible; }
+  #buttons { flex: none; grid-template-rows: 44px repeat(6, 48px); }
+  #display { height: 55px; }
+  #tip-results { min-height: 32px; }
+}
