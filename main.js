@@ -72,6 +72,7 @@ let A = 0;
 let operator = null;
 let B = null;
 let lastBill = null;
+let enteringNewBill = true;
 
 function clearAll() {
   A = 0;
@@ -97,7 +98,10 @@ for (let value of buttonValues) {
   else if (topSymbols.includes(value)) button.classList.add('utility-btn');
   else if (bottomSymbols.includes(value)) button.classList.add('tip-btn');
   button.type = 'button';
-  button.setAttribute('aria-label', value === 'del' ? 'Delete' : value === 'AC' ? 'All clear' : value);
+  button.setAttribute(
+    'aria-label',
+    value === 'del' ? 'Delete' : value === 'AC' ? 'All clear' : value,
+  );
 
   button.addEventListener('click', function () {
     // OPERATORS
@@ -175,6 +179,7 @@ for (let value of buttonValues) {
         clearAll();
         display.value = '0';
         lastBill = null;
+        enteringNewBill = true;
         clearTipUI();
         clearExpr();
       } else if (value === 'del') {
@@ -209,21 +214,38 @@ for (let value of buttonValues) {
 
       // TIP BUTTONS
     } else if (bottomSymbols.includes(value)) {
-      const base = Number(display.value);
-      if (!Number.isFinite(base)) return;
+      // Save the bill only when entering a new amount
+      if (enteringNewBill || lastBill === null) {
+        const base = Number(display.value);
 
+        if (!Number.isFinite(base)) return;
+
+        lastBill = base;
+        enteringNewBill = false;
+      }
+
+      // Always calculate from the original bill
       const pct = Number(value.slice(0, -1)) / 100;
-      const tip = +(base * pct).toFixed(2);
-      const total = +(base + tip).toFixed(2);
 
-      lastBill = base;
+      const tip = +(lastBill * pct).toFixed(2);
+      const total = +(lastBill + tip).toFixed(2);
+
       display.value = tip.toFixed(2);
+
       updateTipUI(lastBill, tip, total);
+
       clearAll();
       clearExpr();
 
       // NUMBERS & DOT
     } else {
+      if (!enteringNewBill) {
+        display.value = '0';
+        lastBill = null;
+        enteringNewBill = true;
+        clearTipUI();
+      }
+
       if (value === '.') {
         if (display.value === '0') {
           display.value = '0.';
