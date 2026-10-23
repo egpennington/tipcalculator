@@ -227,8 +227,16 @@ for (let value of buttonValues) {
       // Always calculate from the original bill
       const pct = Number(value.slice(0, -1)) / 100;
 
-      const tip = +(lastBill * pct).toFixed(2);
-      const total = +(lastBill + tip).toFixed(2);
+      // Convert the bill to integer cents
+      const billCents = Math.round(lastBill * 100);
+      const percent = Number(value.slice(0, -1));
+
+      // Calculate the tip in cents
+      const tipCents = Math.round((billCents * percent) / 100);
+
+      // Convert back to dollars
+      const tip = tipCents / 100;
+      const total = (billCents + tipCents) / 100;
 
       display.value = tip.toFixed(2);
 
