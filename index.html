@@ -40,25 +40,44 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/icons/icon-512.png" />
-    <meta property="og:url" content="https://your-site.netlify.app/" />
+    <meta property="og:url" content="https://calculatorntip.netlify.app/" />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="calculator">
-      <div id="tip-results" aria-live="polite">
-        <span id="bill-amount"></span>
-        <span id="tip-amount"></span>
-        <span id="total-amount"></span>
+      <div class="calculator-main">
+        <!-- Left panel: results and display -->
+        <div class="calculator-display">
+          <div id="tip-results" aria-live="polite">
+            <span id="bill-amount"></span>
+            <span id="tip-amount"></span>
+            <span id="total-amount"></span>
+          </div>
+
+          <div id="expr-line" aria-live="polite"></div>
+
+          <input
+            type="text"
+            id="display"
+            readonly
+            aria-label="Calculator display"
+            inputmode="none"
+          />
+
+          <div class="display-divider"></div>
+
+          <!-- Landscape tip buttons will move here -->
+          <div id="landscape-tips"></div>
+        </div>
+
+        <!-- Right panel: calculator buttons -->
+        <div id="buttons" aria-label="Calculator keypad"></div>
       </div>
-      <div id="expr-line" aria-live="polite"></div>
-      <input type="text" id="display" readonly aria-label="Calculator display" inputmode="none" />
-      <div class="display-divider"></div>
-      <div id="buttons" aria-label="Calculator keypad"></div>
+
       <footer class="app-footer" role="contentinfo">
         <div class="footer-inner">
           <span class="brand">TipCalc</span>
           <span class="dot">•</span>
-
           <a href="https://emmettpennington.com/" target="_blank" rel="noopener"
             >Contact</a
           >

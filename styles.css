@@ -38,6 +38,30 @@ body {
   overflow: hidden;
 }
 
+
+/* Shared layout */
+.calculator-main {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.calculator-display {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+#landscape-tips {
+  display: none;
+}
+
+/* Keypad fills remaining portrait space */
+.calculator-main #buttons {
+  flex: 1 1 0;
+}
+
+
 #tip-results {
   flex: 0 0 auto;
   min-height: 54px;
@@ -158,4 +182,96 @@ body {
   #buttons { flex: none; grid-template-rows: 44px repeat(6, 48px); }
   #display { height: 55px; }
   #tip-results { min-height: 32px; }
+}
+
+
+/* Two-column landscape layout */
+@media (orientation: landscape) and (max-height: 570px) {
+  #calculator {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    padding:
+      6px calc(12px + env(safe-area-inset-right, 0px))
+      6px calc(12px + env(safe-area-inset-left, 0px));
+  }
+
+  .calculator-main {
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 11fr);
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .calculator-display {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  #tip-results {
+    min-height: 48px;
+    font-size: clamp(12px, 1.6vw, 16px);
+    gap: 4px;
+  }
+
+  #expr-line {
+    height: 18px;
+    font-size: 12px;
+  }
+
+  #display {
+    height: 65px;
+    font-size: 42px;
+  }
+
+  #landscape-tips {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  #landscape-tips button {
+    border: 0;
+    border-radius: 999px;
+    background: var(--tip);
+    color: #1c1c1c;
+    min-height: 42px;
+    font-size: 20px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+#buttons {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0;
+}
+
+  #buttons button {
+    font-size: clamp(17px, 3.8dvh, 26px);
+  }
+
+  #buttons .clear-btn {
+    grid-column: auto;
+    font-size: 20px;
+  }
+
+  #buttons .zero-btn {
+    grid-column: auto;
+  }
+
+  .app-footer {
+    padding: 3px;
+    font-size: 11px;
+  }
 }

@@ -266,6 +266,28 @@ for (let value of buttonValues) {
   document.getElementById('buttons').appendChild(button);
 }
 
+// Move tip buttons into the left panel in landscape.
+// Keep the same button elements and event listeners.
+const keypad = document.getElementById('buttons');
+const landscapeTips = document.getElementById('landscape-tips');
+const landscapeQuery = window.matchMedia(
+  '(orientation: landscape) and (max-height: 570px)',
+);
+
+function arrangeTipButtons() {
+  const tipButtons = Array.from(document.querySelectorAll('.tip-btn'));
+
+  if (landscapeQuery.matches) {
+    tipButtons.forEach((button) => landscapeTips.appendChild(button));
+  } else {
+    tipButtons.forEach((button) => keypad.appendChild(button));
+  }
+
+  fitDisplayText();
+}
+
+landscapeQuery.addEventListener('change', arrangeTipButtons);
+
 // Fit long numeric results inside the available display width.
 // The calculator's math is unchanged; this adjusts only the font size.
 const displayCanvas = document.createElement('canvas');
@@ -274,7 +296,9 @@ function fitDisplayText() {
   const available = Math.max(0, display.clientWidth - 8);
   if (!available || !displayContext) return;
   const style = getComputedStyle(display);
-  const baseSize = Math.min(76, Math.max(32, window.innerWidth * 0.11));
+  const baseSize = landscapeQuery.matches
+    ? 42
+    : Math.min(76, Math.max(32, window.innerWidth * 0.11));
   let size = baseSize;
   const family = style.fontFamily;
   const text = display.value || '0';
@@ -286,7 +310,7 @@ function fitDisplayText() {
   display.style.fontSize = `${size}px`;
 }
 window.addEventListener('resize', fitDisplayText);
-fitDisplayText();
+arrangeTipButtons();
 
 // PWA service worker
 if ('serviceWorker' in navigator) {
